@@ -1,361 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" th:href="@{/css/home.css}" />
-	<title>Fleet Xpress Menu</title>
-	<style>
-		table {
-			width: 80%;
-			margin: 0 auto;
-			border-collapse: collapse;
-			background-color: #fff;
-			border: 1px solid #ddd;
-		}
-
-		th,
-		td {
-			border: 1px solid #ddd;
-			padding: 8px;
-			text-align: left;
-		}
-
-		th {
-			background-color: #f2f2f2;
-			color: #333;
-		}
-
-		tr:nth-child(even) {
-			background-color: #f2f2f2;
-		}
-
-		tr:hover {
-			background-color: #ddd;
-		}
-
-		/* Style for the pop-up */
-		.popup-container {
-			display: none;
-			position: fixed;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			background-color: #fff;
-			padding: 20px;
-			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-			z-index: 1000;
-			border-radius: 8px;
-		}
-
-		.popup-header {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			border-bottom: 1px solid #ddd;
-			padding-bottom: 10px;
-			margin-bottom: 10px;
-		}
-
-		.close-button-container {
-			display: inline-block;
-			padding: 2.5px;
-			border-radius: 25%;
-			background-color: #ddd;
-			/* Adjust the background color as needed */
-			cursor: pointer;
-			margin-right: 10px;
-		}
-
-		.close-button {
-			cursor: pointer;
-			font-size: 20px;
-			color: rgb(255, 0, 0);
-			background: none;
-			border: none;
-		}
-
-		.popup-body label {
-			display: block;
-			margin-bottom: 5px;
-		}
-
-		.popup-body input {
-			width: 100%;
-			padding: 8px;
-			margin-bottom: 15px;
-			border: 1px solid #ddd;
-			border-radius: 4px;
-			box-sizing: border-box;
-		}
-
-		.popup-body button {
-			background-color: #4caf50;
-			color: white;
-			padding: 10px 15px;
-			border: none;
-			border-radius: 4px;
-			cursor: pointer;
-		}
-
-		h2 {
-			color: red;
-			text-align: center;
-		}
-		
-    .search-container {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        margin-left: 75px;
-        text-align: left;
-    }
-
-    label {
-        font-size: 16px;
-        margin-right: 10px;
-    }
-
-    #searchBox {
-        padding: 8px;
-        font-size: 14px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-
-	</style>
+	<title>FleetXpress</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/login.css}" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
-<body>
-	<div class="header">
-		<div class="dropdown">
-			<h3 class="user-name">
-				<span th:text="${userName}"></span>
-			</h3>
-		</div>
-		<a href="/home" class="logo">Fleet Xpress</a>
-		<a href="/logout" class="logout">Logout</a>
-	</div>
-
-	<div class="detail-container">
-		<div>
-			<a href="/profile" class="menu-button">My Profile</a>
-			<a href="/rentalDetails" class="menu-button">My Rentals</a>
-		</div>
-	</div>
-	<h2>Available Vehicles</h2>
-	<!-- Add this code above the table -->
-	<!-- Add this code above the table -->
-	<div class="search-container">
-		<label for="searchBox">Search Vehicle:</label>
-		<input type="text" id="searchBox" oninput="searchVehicles()"
-			placeholder="Search by Make, Model, Year, License Plate">
-	</div>
-
-	<br>
-	<table>
-		<thead>
-			<tr>
-				<th> </th>
-				<th>Make</th>
-				<th>Model</th>
-				<th>Year</th>
-				<th>License Plate</th>
-				<th>Status</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="vehicle : ${vehicles}">
-				<td id="vehicleid" th:text="${vehicle.vehicleid}" hidden></td>
-				<td>
-					<div class="menu-container1">
-						<div class="menu-dropdown1">
-							<a class="menu-button1">&#8942;</a>
-							<div class="menu-dropdown-content1">
-								<a href="#" th:onclick="'openRentPopup(\'' + ${vehicle.vehicleid} + '\')'">Rent</a>
-								<a th:href="@{'/vehicleDetails/' + ${vehicle.vehicleid}}">Vehicle Details</a>
-								<!-- Add more vehicle categories as needed -->
-							</div>
-						</div>
-				</td>
-				<td th:text="${vehicle.make}">Make</td>
-				<td th:text="${vehicle.model}">Model</td>
-				<td th:text="${vehicle.year}">Year</td>
-				<td th:text="${vehicle.licensePlate}">License Plate</td>
-				<td th:text="${vehicle.status.status}">Status</td>
-			</tr>
-		</tbody>
-	</table>
-
-	<!-- Pop-up container with date fields -->
-	<div class="popup-container" id="rentPopup">
-		<div class="popup-header">
-			<h2>New Reservation</h2>
-			<div class="close-button-container" onclick="closeRentPopup()">
-				<button class="close-button">&times;</button>
+<body style="background-image: url('/images/background.png'); background-size: cover; background-repeat: no-repeat;">
+	<form th:action="@{/registration}" method="get">
+		<button class="btn btn-md btn-warning btn-block" type="Submit">Go To Registration Page</button>
+	</form>	
+	
+	<div class="container">
+		<img th:src="@{/images/logo.png}" class="img-responsive center-block" width="300" height="300" alt="Logo" />
+		<form th:action="@{/login}" method="POST" class="form-signin">
+			<h3 class="form-signin-heading" th:text="Welcome"></h3>
+			<br/>
+			 
+			<input type="text" id="username" name="username"  th:placeholder="username"
+				class="form-control" /> <br/> 
+			<input type="password"  th:placeholder="Password"
+				id="password" name="password" class="form-control" /> <br /> 
+				
+			<div align="center" th:if="${param.error}">
+				<p style="font-size: 20; color: #FF1C19;">User ID or Password invalid, please verify</p>
 			</div>
-		</div>
-		<div class="popup-body">
-			<input type="hidden" id="vehicleIdPopup" name="vehicleIdPopup" />
-			<label for="fromDate">PICK-UP</label>
-			<input type="date" id="fromDate" name="fromDate" onchange="updateReturnDateMin()" required>
-			<label for="toDate">RETURN</label>
-			<input type="date" id="toDate" name="toDate" required>
-			<button type="button" onclick="rentVehicle()">Rent</button>
-		</div>
+			<button class="btn btn-lg btn-primary btn-block" name="Submit" value="Login" type="Submit" th:text="Login"></button>
+		</form>
 	</div>
-
-	<div class="guidelines">
-		<h2>User Guidelines</h2>
-		<ul>
-			<li><strong>Regular Maintenance:</strong> Establish a comprehensive maintenance schedule for all vehicles.
-				Regular inspections and timely repairs can extend the lifespan of the fleet and reduce downtime.</li>
-			<li><strong>Vehicle Selection:</strong> Choose the right vehicles for the specific needs of your
-				organization. Consider factors like fuel efficiency, payload capacity, and safety features.</li>
-			<li><strong>Route Optimization:</strong> Implement route optimization strategies to reduce fuel consumption
-				and improve delivery or service efficiency.</li>
-			<li><strong>Compliance with Regulations:</strong> Stay informed about and ensure compliance with local,
-				state, and federal regulations, including safety standards and emissions requirements.</li>
-			<li><strong>Driver Monitoring:</strong> Use driver monitoring tools and technologies to track and assess
-				driver behavior, including speeding, harsh braking, and idling. Provide feedback and training to improve
-				driver performance.</li>
-		</ul>
-	</div>
-
-	<script>
-		function openRentPopup(vehicleId) {
-			// Set the vehicleid in the hidden field of the popup
-			document.getElementById('rentPopup').style.display = 'block';
-			document.getElementById('vehicleIdPopup').value = vehicleId;
-		}
-
-		function closeRentPopup() {
-			document.getElementById('rentPopup').style.display = 'none';
-		}
-
-		function updateReturnDateMin() {
-			// Set the minimum return date to the selected pickup date
-			var fromDate = document.getElementById('fromDate').value;
-			document.getElementById('toDate').min = fromDate;
-		}
-
-		function rentVehicle() {
-			// Get the selected dates
-			var fromDate = document.getElementById('fromDate').value;
-			var toDate = document.getElementById('toDate').value;
-			var vehicleId = document.getElementById('vehicleIdPopup').value;
-
-			// Make an AJAX request to the /rentVehicle endpoint
-			var xhr = new XMLHttpRequest();
-			xhr.onreadystatechange = function () {
-				if (xhr.readyState === XMLHttpRequest.DONE) {
-					if (xhr.status === 200) {
-						closeRentPopup(); // Close the pop-up after processing
-						// Successful response, you can handle it accordingly
-						alert("Vehicle rented successfully!");
-						location.reload();
-					} else {
-						// Handle the error if needed
-						alert("Error renting the vehicle. Please try again.");
-					}
-				}
-			};
-
-			xhr.open('POST', '/rentVehicle', true);
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			// You may need to send additional data in the request, depending on your server-side requirements
-			var data = '&fromDate=' + encodeURIComponent(fromDate) + '&toDate=' + encodeURIComponent(toDate) + '&vehicleId=' + encodeURIComponent(vehicleId);
-			xhr.send(data);
-		}
-
-		function searchVehicles() {
-			var searchQuery = document.getElementById('searchBox').value;
-
-			// Make an AJAX request to the /searchVehicle endpoint
-			var xhr = new XMLHttpRequest();
-			xhr.onreadystatechange = function () {
-				if (xhr.readyState === XMLHttpRequest.DONE) {
-					if (xhr.status === 200) {
-						// Successful response, update the table with the search results
-						updateTable(JSON.parse(xhr.responseText));
-					} else {
-						// Handle the error if needed
-						console.error("Error searching vehicles. Please try again.");
-					}
-				}
-			};
-
-			xhr.open('GET', '/searchVehicles?query=' + encodeURIComponent(searchQuery), true);
-			xhr.send();
-		}
-
-		function updateTable(searchResults) {
-			var tableBody = document.querySelector('tbody');
-			tableBody.innerHTML = ''; // Clear the existing table rows
-
-			// Iterate through the search results and populate the table
-			for (var i = 0; i < searchResults.length; i++) {
-				var vehicle = searchResults[i];
-				var row = tableBody.insertRow(i);
-
-				// Insert cells with vehicle details
-				// (Note: Update the following lines to match your actual vehicle properties)
-				var cell1 = row.insertCell(0);
-				cell1.id = 'vehicleid';
-				cell1.textContent = vehicle.vehicleid;
-				cell1.hidden = true;
-
-				var cell2 = row.insertCell(1);
-				var menuContainer = document.createElement('div');
-				menuContainer.className = 'menu-container1';
-				var menuDropdown = document.createElement('div');
-				menuDropdown.className = 'menu-dropdown1';
-				var menuButton = document.createElement('a');
-				menuButton.className = 'menu-button1';
-				menuButton.innerHTML = '&#8942;';
-				var menuContent = document.createElement('div');
-				menuContent.className = 'menu-dropdown-content1';
-				var rentLink = document.createElement('a');
-				rentLink.href = '#';
-				rentLink.setAttribute('onclick', 'openRentPopup(\'' + vehicle.vehicleid + '\')');
-				rentLink.textContent = 'Rent';
-				var vehicleDetailsLink = document.createElement('a');
-				vehicleDetailsLink.href = '/vehicleDetails/' + vehicle.vehicleid;
-				vehicleDetailsLink.textContent = 'Vehicle Details';
-
-				menuContent.appendChild(rentLink);
-				menuContent.appendChild(vehicleDetailsLink);
-				menuDropdown.appendChild(menuButton);
-				menuDropdown.appendChild(menuContent);
-				menuContainer.appendChild(menuDropdown);
-				cell2.appendChild(menuContainer);
-
-					var cell3 = row.insertCell(2);
-					cell3.textContent = vehicle.make;
-
-					var cell4 = row.insertCell(3);
-					cell4.textContent = vehicle.model;
-
-					var cell5 = row.insertCell(4);
-					cell5.textContent = vehicle.year;
-
-					var cell6 = row.insertCell(5);
-					cell6.textContent = vehicle.licensePlate;
-
-					var cell7 = row.insertCell(6);
-					cell7.textContent = vehicle.status.status;
-
-				// Append the row to the table body
-				tableBody.appendChild(row);
-			}
-		}
-
-
-
-	</script>
-
-
 </body>
-
 </html>
+
+
+
