@@ -116,7 +116,7 @@
 			Registration successful! You can now <a href="/login">login here</a>.
 		</div>
 		<h1>Registration</h1>
-		<form action="/registration" method="post" onsubmit="return validateForm()">
+		<form action="/admin/registration" method="post" onsubmit="return validateForm()">
 
 			<label for="username">User Id:</label>
 			<input type="text" id="username" name="username" required="">
@@ -136,8 +136,6 @@
 			<button type="submit" onclick="handleSuccessfulRegistration()">Sign Up</button>
 		</form>
 		<p>Already have an account? <a href="/login">Login here</a></p>
-		<br>
-		<p><a href="/admin/registration">Admin Sign Up here</a></p>
 	</div>
 
 
@@ -171,18 +169,6 @@
 			return true;
 		}
 
-		function showSuccessBanner() {
-			var successBanner = document.getElementById("successBanner");
-			successBanner.style.display = "block";
-		}
-
-		function handleSuccessfulRegistration() {
-			var registrationSuccessful = true;
-
-			if (registrationSuccessful) {
-				showSuccessBanner();
-			}
-		}
 
 	</script>
 </body>

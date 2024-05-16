@@ -1,4 +1,4 @@
-package com.adbms.fleetXpress.entity;
+package com.adbms.eventManagement.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "role",schema="fleet_Xpress")
+@Table(name = "role",schema="event_management")
 public class Roles {
 	
 	@Id
@@ -16,7 +16,7 @@ public class Roles {
 	@Column(name = "roleid")
 	private Long roleid;
 	
-	@Column(name = "rolename")
+	@Column(name = "role_type")
 	private String rolename;
 
 	public Long getRoleid() {

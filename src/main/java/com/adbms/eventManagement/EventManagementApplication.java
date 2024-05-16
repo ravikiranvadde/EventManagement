@@ -1,4 +1,4 @@
-package com.adbms.fleetXpress;
+package com.adbms.eventManagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -8,15 +8,15 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication
 @EnableAutoConfiguration
-public class FleetXpressSecuredApplication extends SpringBootServletInitializer {
+public class EventManagementApplication extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(FleetXpressSecuredApplication.class);
+		return application.sources(EventManagementApplication.class);
 	}
 	
 	public static void main(String[] args) {
-		SpringApplication.run(FleetXpressSecuredApplication.class, args);
+		SpringApplication.run(EventManagementApplication.class, args);
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.adbms.fleetXpress;
+package com.adbms.eventManagement;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

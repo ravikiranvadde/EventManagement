@@ -1,4 +1,4 @@
-package com.adbms.fleetXpress.service;
+package com.adbms.eventManagement.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,10 +6,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.adbms.fleetXpress.entity.Roles;
-import com.adbms.fleetXpress.entity.User;
-import com.adbms.fleetXpress.repo.RolesRepo;
-import com.adbms.fleetXpress.repo.UserRepo;
+import com.adbms.eventManagement.entity.Roles;
+import com.adbms.eventManagement.entity.User;
+import com.adbms.eventManagement.repo.RolesRepo;
+import com.adbms.eventManagement.repo.UserRepo;
 
 @Service
 public class UserDetailService implements UserDetailsService {
@@ -40,19 +40,16 @@ public class UserDetailService implements UserDetailsService {
 		return roleRepository.findRoleByName(role);
 	}
 
-	public void saveUser(String username, String password, String role, String firstName, String lastName, String phone,
-			String email, String licenseNumber ) {
+	public void saveUser(String username, String password, String role, String phone,
+			String email ) {
 		Roles roles = new Roles();
 		roles = getRole(role);
 		User user = new User();
 		user.setUsername(username);
 		user.setPassword(password);
 		user.setRoles(roles);
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
 		user.setEmail(email);
 		user.setPhone(phone);
-		user.setLicenseNumber(licenseNumber);
 		userRepository.save(user);
 	}
 

@@ -1,4 +1,4 @@
-package com.adbms.fleetXpress.entity;
+package com.adbms.eventManagement.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,12 +10,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="user", schema="fleet_Xpress")
+@Table(name="user", schema="event_management")
 public class User {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name="user_id")
 	private Long userid;
 	
 	@Column(name="username")
@@ -25,14 +25,8 @@ public class User {
 	private String password;
 	
 	@ManyToOne
-	@JoinColumn(name="role")
+	@JoinColumn(name="role_id")
 	private Roles roles;
-	
-	@Column(name="first_name")
-	private String firstName;
-	
-	@Column(name="last_name")
-	private String lastName;
 	
 	@Column(name="phone")
 	private String phone;
@@ -40,9 +34,6 @@ public class User {
 	@Column(name="email")
 	private String email;
 	
-	@Column(name="license_number")
-	private String licenseNumber;
-
 	public Long getUserid() {
 		return userid;
 	}
@@ -75,24 +66,6 @@ public class User {
 		this.roles = role;
 	}
 	
-	
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
@@ -114,28 +87,18 @@ public class User {
 	
 	
 
-	public String getLicenseNumber() {
-		return licenseNumber;
-	}
-
-	public void setLicenseNumber(String licenseNumber) {
-		this.licenseNumber = licenseNumber;
-	}
 
 	public User() {}
 
-	public User(Long userid, String username, String password, Roles roles, String firstName, String lastName,
-			String phone, String email, String licenseNumber) {
+	public User(Long userid, String username, String password, Roles roles,
+			String phone, String email) {
 		super();
 		this.userid = userid;
 		this.username = username;
 		this.password = password;
 		this.roles = roles;
-		this.firstName = firstName;
-		this.lastName = lastName;
 		this.phone = phone;
 		this.email = email;
-		this.licenseNumber = licenseNumber;
 	};
 	
 	

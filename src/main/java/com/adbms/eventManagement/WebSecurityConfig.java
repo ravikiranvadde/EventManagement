@@ -1,4 +1,4 @@
-package com.adbms.fleetXpress;
+package com.adbms.eventManagement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,11 +10,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.adbms.fleetXpress.service.UserDetailService;
+import com.adbms.eventManagement.service.UserDetailService;
 
 @Configuration
 @EnableWebSecurity
@@ -26,14 +26,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
     private UserDetailService userDetailsService;
 	
-//	@Bean
-//	AuthenticationProvider authenticationProvider() {
-//		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-//		provider.setUserDetailsService(userDetailsService);
-//		provider.setPasswordEncoder(new BCryptPasswordEncoder());
-//		return provider;
-//	}
-
 	@Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
@@ -56,23 +48,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-			.antMatchers("/").permitAll()
-			.antMatchers("/login").permitAll()
-			.antMatchers("/registration").permitAll()
-			.antMatchers("/admin/**").hasAuthority("ADMIN")
-			.antMatchers("/**").hasAnyAuthority("USER","ADMIN","DRIVER")
-			.anyRequest().authenticated()
-			.and()
-			.formLogin()
-			.loginPage("/login").permitAll().defaultSuccessUrl("/home", true)
-			.usernameParameter("username")
-			.passwordParameter("password")
-			.and().logout()
-			.permitAll()
-			.logoutSuccessUrl("/").invalidateHttpSession(true)
-			.deleteCookies("JSESSIONID").and().exceptionHandling()
-			.accessDeniedPage("/access-denied").and().csrf().disable();
+	    http.authorizeRequests(requests -> requests
+	            .antMatchers("/").permitAll()
+	            .antMatchers("/login").permitAll()
+	            .antMatchers("/registration").permitAll()
+	            .antMatchers("/admin/registration").permitAll()
+	            .antMatchers("/admin/**").hasAuthority("ADMIN")
+	            .antMatchers("/**").hasAnyAuthority("USER", "ADMIN")
+	            .anyRequest().authenticated())
+	            .formLogin(login -> login
+	                    .loginPage("/login").permitAll().defaultSuccessUrl("/homePage", true)
+	                    .usernameParameter("username")
+	                    .passwordParameter("password").successHandler((request, response, authentication) -> {
+	                        // Redirect user based on role
+	                        for (GrantedAuthority authority : authentication.getAuthorities()) {
+	                            if (authority.getAuthority().equals("ADMIN")) {
+	                                response.sendRedirect("/adminHomePage");
+	                            } else {
+	                                response.sendRedirect("/homePage");
+	                            }
+	                        }
+	                    })).logout(logout -> logout
+	            .permitAll()
+	            .logoutSuccessUrl("/").invalidateHttpSession(true)
+	            .deleteCookies("JSESSIONID")).exceptionHandling(handling -> handling
+	            .accessDeniedPage("/access-denied")).csrf(csrf -> csrf.disable());
 	}
 	
 	@Override

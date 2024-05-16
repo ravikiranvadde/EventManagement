@@ -1,4 +1,4 @@
-package com.adbms.fleetXpress.service;
+package com.adbms.eventManagement.service;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.adbms.fleetXpress.entity.User;
+import com.adbms.eventManagement.entity.User;
 
 public class MyUserDetails implements UserDetails {
 	

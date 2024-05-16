@@ -1,4 +1,4 @@
-package com.adbms.fleetXpress.dto;
+package com.adbms.eventManagement.dto;
 
 public class UserDTO {
 	
